@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <!--to provide a space between submit button and above form column-->
+    <style>
+        #button{  
+            margin-top: 10px;
+        }
+
+        
+    </style>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="col-lg-6 col-lg-offset-3">
+                <div id="ui">
+                    <h1 class="text-center"><b>SignUp Page</b></h1>
+                    <form onsubmit="signup(event)" class="form-group">
+                        <div class="row">
+                            <label>Enter Your Name:</label>
+                            <input type="text" name="username" id="username" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <label>Enter Your Email:</label>
+                            <input type="text" name="email" id="email"  class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <label>Enter Your Password:</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <input type="submit" value="SignUp" name="button" id="button" class="btn btn-primary btn-block btn-lg">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6 col-lg-offset-3">
+                <div id="outputContainer">
+                    <ul id="listOfItems"></ul>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-lg-6 col-lg-offset-4">
+            <a href="./login.html"><b>Existing User - Login</b></a>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+        <script src="signup.js"></script>
+    </body>
+</html>
