@@ -38,14 +38,16 @@ exports.addexpense = async (req, res, next) => {
         /***************************This is final leaderboard optimisation**************/
         //im creating new column called total expense in users table. whenever user adds a new expense 
         //im doing pre-calculating total expnese in total expense column only
-        const expenseToAdd = await alldetails.findOne({ where: { userId: req.user.id }, transaction: t });
-        //this findOne logic is used to retrieve the recently added expense record for the current user. current user comes to know us from req.user.id
-        // The subsequent code then uses the expens property of the expenseToAdd object to calculate the updated total expense of the user
-        const total = Number(req.user.totalExpense) + Number(expenseToAdd.expens);
-        console.log(total);
+
+        // Retrieve the user's current total expense from the database
+        const currentUser = await userdb.findOne({where:{id:req.user.id},transaction:t});
+        const currentTotalExpense = Number(currentUser.totalExpense);
+        // Calculate the updated total expense by adding the new expense to the current total expense
+        updatedTotalExpense = currentTotalExpense + Number(expens)
+
         //update the totalExpense column of users table
         await userdb.update({
-            totalExpense: total
+            totalExpense: updatedTotalExpense
         }, {
             where: { id: req.user.id },
             transaction: t
@@ -107,6 +109,10 @@ exports.deleteexpense = async (req, res) => {
 
         const detailsId = req.params.id;
         const expenseToDelete = await alldetails.findOne({ where: { id: detailsId, userId: req.user.id } }, { transaction: t });
+
+        // Capture the expens value of the expense to be deleted
+        const expens = expenseToDelete.expens;
+
         const data = await alldetails.destroy({ where: { id: detailsId, userId: req.user.id } }, { transaction: t });
         //when we make an delete request url along with in headers we are passing token
         //backend will recieved token and in the middleware we are dcrypting the token so we will get userId
@@ -118,10 +124,21 @@ exports.deleteexpense = async (req, res) => {
         //im creating new column called total expense in usertable. whenever user creates a new expense 
         //im doing pre-calculating total expnese in total expense column only
         //findone method we comes to which user wants to delete an expense by req.user.id,from id:detailsId we will get id of the item we want to delete
-        const total = Number(req.user.totalExpense) - Number(expenseToDelete.expens);
-        console.log(total);
+       
+
+        // the code captures the expens value of the(expense-----line no:113) expense to be deleted before proceeding with the deletion.
+        //Then, after the deletion is successful, it retrieves the current user's totalExpense, subtracts the expens value, and updates the totalExpense column accordingly.
+        //This should now correctly deduct the deleted expense from the user's totalExpense in the userdb table.
+        
+        // Retrieve the user's current total expense from the database
+        const currentUser = await userdb.findOne({where:{id:req.user.id},transaction:t});
+        const currentTotalExpense = Number(currentUser.totalExpense);
+        // Calculate the updated total expense by adding the new expense to the current total expense
+        updatedTotalExpense = currentTotalExpense - Number(expens)
+
+
         await userdb.update({
-            totalExpense: total
+            totalExpense: updatedTotalExpense
         }, {
             where: { id: req.user.id },
             transaction: t
